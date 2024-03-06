@@ -1,14 +1,27 @@
 import scrapy
-
+from lnu_faculties.items import FacultyItem
 
 class LnuSpider(scrapy.Spider):
     name = 'lnu'
     start_urls = ['https://lnu.edu.ua/about/faculties/']
 
     def parse(self, response):
-        
         for faculty in response.css('ul.structural-units > li'):
-            yield {
-                'faculty_name': faculty.css('a::text').get(),
-                'faculty_link': faculty.css('a::attr(href)').get()
-            }
+            faculty_item = FacultyItem()
+            faculty_item['faculty_name'] = faculty.css('a::text').get()
+            faculty_item['faculty_link'] = faculty.css('a::attr(href)').get()
+            
+            
+            yield scrapy.Request(faculty_item['faculty_link'], callback=self.parse_faculty, meta={'faculty_item': faculty_item})
+
+    def parse_faculty(self, response):
+        faculty_item = response.meta['faculty_item']
+
+        
+        for news_section in response.css('section.news'):
+            news_items = news_section.css('h5 a')
+            for news_item in news_items:
+                faculty_item['news_title'] = news_item.css('::text').get()
+                faculty_item['news_link'] = news_item.css('::attr(href)').get()
+                
+                yield faculty_item
