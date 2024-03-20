@@ -15,7 +15,9 @@ class LnuSpider(scrapy.Spider):
 
     def parse_faculty(self, response):
         faculty_item = response.meta['faculty_item']
-        
+        image_urls = response.css('div.image::attr(style)').re_first(r"url\((.*?)\)")
+        if image_urls:
+            faculty_item['image_urls'] = [image_urls]
         for news_section in response.css('section.news'):
             news_items = news_section.css('h5 a')
             for news_item in news_items:

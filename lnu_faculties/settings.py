@@ -93,8 +93,11 @@ TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 FEED_FORMAT = 'json'
 FEED_URI = 'lnu_faculties.json'
+IMAGES_STORE = 'images'
+
 
 ITEM_PIPELINES = {
+    'lnu_faculties.pipelines.FacultyImagePipeline': 1,
     'lnu_faculties.pipelines.CapitalToOrdinaryPipeline': 100,
     'lnu_faculties.pipelines.MySQLPipeline': 100,
 }
