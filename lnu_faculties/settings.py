@@ -94,7 +94,11 @@ FEED_EXPORT_ENCODING = "utf-8"
 FEED_FORMAT = 'json'
 FEED_URI = 'lnu_faculties.json'
 
-    
+ITEM_PIPELINES = {
+    'lnu_faculties.pipelines.CapitalToOrdinaryPipeline': 100,
+    'lnu_faculties.pipelines.MySQLPipeline': 100,
+}
+
 FEEDS = {
     'lnu_faculties.xml': {
         'format': 'xml',
